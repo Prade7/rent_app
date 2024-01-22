@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename = 'roomDetails.css')}}">
+{% endblock %}
+
+{% block content %}
+<center><h4>
+
+ADD person details
+</h4>
+</center> 
+ <form method="POST" >
+    <input type="text" class="person-name" name="person-name" placeholder="Enter the person name">
+    <input type="text" class="person-age" name="person-age" placeholder="Enter the age of the person">
+    <input type="textarea" class="person-address" name="person-address" placeholder="Enter the address of the person">
+    <input type="phone" class="person-phone-number" name="person-phone-number" placeholder="Enter the phone number">
+    <button type="submit" class="Add-person" >Add</button> 
+ </form>
+ {% if person_details %}
+<h3 class="person-details-heading">Person details</h3>
+<ul class="room-list">
+    {% for person in person_details %}
+<li class="room-item">
+    <form method="GET" class="person-item-form" action="">
+        <div class="person-details" onclick="this.parentNode.submit();">
+            <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
+            <h4 class="person-name" >Person name: {{ person.person_name }}</h4>
+            <h4 class="person-age">Person Age: {{person.age}}</h4>
+            <h4 class="person-address">address : {{person.address}}</h4>
+            <h4>phone number : {{person.phone_number}}</h4>
+        </div>
+    </form>
+</li>
+{% endfor %}
+
+</ul>
+ {% endif %}
+{% endblock %}

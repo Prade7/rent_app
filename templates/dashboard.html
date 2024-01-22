@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename = 'dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+
+{% if usr_name %}
+<h3 class="user-name">Hey {{usr_name}} !</h3>
+{% endif %}
+{% if property_count %}
+<h3 class="property-count">Total number of properties {{property_count}}</h3>
+{% endif %}
+{% if room_count %}
+<h3 class="room-count">Total number of rooms {{room_count}}</h3>
+{% endif %}
+{% if person_count %}
+<h3 class="person-count">Total number of persons {{person_count}}</h3>
+{% endif %}
+
+{% endblock %}

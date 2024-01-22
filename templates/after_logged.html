@@ -1,0 +1,34 @@
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename = 'after_logged.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="add-property">
+    <h2 class="add-property-heading">Add Property</h2>
+    <form method="POST" class="add-property-form" method="POST">
+        <input type="text" class="property_name input-field" placeholder="Enter your property name" name="propertyName" required>
+        <button type="submit" class="submit-button">Add</button>
+    </form>
+    {% if list_items %}
+    <h3 class="property-list-heading">Property List</h3>
+    <ul class="property-list">
+        {% for item in list_items %}
+    <li class="property-item">
+        <form method="GET" class="property-item-form" action="/addPropertyDetails">
+            <div class="property-item-details" onclick="this.parentNode.submit();">
+                <input type="hidden" value="{{item.user_id}}" name="item_id">
+                <input type="hidden" value="{{item.property_id}}" name = "property_id">
+                <h4 class="property-name"> {{ item.property_name }}</h4>
+                <h4>{{item.floor}}</h4>
+                <h4>{{item.room_no}}</h4>
+                <!-- <p class="user-id">User ID: {{ item.user_id }}</p>
+                <p class="property-id">Property ID: {{ item.property_id }}</p> -->
+            </div>
+        </form>
+    </li>
+{% endfor %}
+
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

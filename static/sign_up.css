@@ -1,0 +1,77 @@
+body {
+    background-color: #f2f2f2;
+}
+
+.signup-form {
+    width: 90%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 30px 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.signup-form label {
+    font-size: 22px;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+}
+
+.signup-form input[type="text"], .signup-form input[type="email"], .signup-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.signup-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8c52ff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.signup-form button:hover {
+    background-color: #6a41cc;
+}
+
+.signup-form .sigup-h5 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+.signup-form .signup-form-login {
+    color: #8c52ff;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+.signup-form .signup-form-login:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries */
+@media screen and (min-width: 600px) {
+    .signup-form {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .signup-form {
+        width: 60%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .signup-form {
+        width: 40%;
+    }
+}
