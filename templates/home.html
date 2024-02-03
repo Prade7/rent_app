@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename = 'roomDetails.css')}}">
+{% endblock %}
+{% block content %}
+
+<!-- {{ all_persons }} -->
+<table>
+    <tr>
+
+    <th>Room no</th>
+    <th>Person name</th>
+    <th>Phone number</th>
+    <th>Property name</th>
+</tr>
+    {% for person in all_persons %}
+<tr>
+    <td>{{person.room.room_no}}</td>
+    <td>{{person.person_name}}</td>
+    <!-- <td>{{person.age}}</td> -->
+    <!-- <td>{{person.address}}</td> -->
+    <td>{{person.phone_number}}</td>
+    <!-- <td>{{person.person_email}}</td> -->
+    <!-- <td>{{person.aadhar_number}}</td> -->
+    <td>{{person.room.property_detail.property_name}}</td>
+    <td>
+        {{person.monthly_payment_amount}}
+    </td>
+   <td> <form action="/editDelete" method="GET">
+        <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
+        <input type="hidden" value="{{person.monthly_payment_amount}}" name="payment-amount">
+        <input type="hidden" name="payment-date" value="{{person.next_remainder_date}}">
+        <input type="hidden" value="{{ person.person_name }}" name="person_name">
+        <input type="hidden" value="{{person.phone_number}}" name="person-number">
+        <input type="hidden" value="{{person.aadhar_number}}" name="person-aadhar">
+        <input type="hidden" value="{{person.next_remainder_date}}" name="next-payment-date">
+        <input type="hidden" value="{{person.age}}" name="person-age">
+        <input type="hidden" value="{{person.address}}" name="person-address" > 
+        <input type="hidden" value="{{person.person_email}}" name="person-email">
+        <input type="hidden" name="day" value="{{person.day}}">
+        <input type="hidden" name="home" value="redirect_to_home">
+        <input type="hidden" name="monthly_payment_amount" value="{{person.monthly_payment_amount}}" >
+        <button type="edit">Edit Person details</button>
+    </form></td>
+        <td>
+            
+    </td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% if unpaid_payments %}
+
+<table>
+    <tr>
+        <th>Room no</th>
+        <th>Property name</th>
+        <th>Person name </th>
+        <th>Phone number</th>
+        <th>Payment Amount</th>
+        <th>Monthly payment date</th>
+    </tr>
+    {%     for person, room, property_detail, payment in unpaid_payments %}
+
+    <tr>
+        <td>{{room.room_no}}</td>
+        <td>{{property_detail.property_name}}</td>
+        <td>{{person.person_name}}</td>
+        <td>{{person.phone_number}}</td>
+        <td>{{person.monthly_payment_amount}}</td>
+        <td>{{payment.payment_due_date}}</td>
+        <td><form action="/paid" method="POST">
+            <input type="hidden" name = "paid-payment-id" value ="{{payment.payment_id}}">
+            <input type="hidden" name="paid-amount" value="{{payment.person.monthly_payment_amount}}">
+            <input type="hidden" name="paid-person-id" value="{{person.person_id}}">
+            <input type="hidden" name="paid-person-name" value="{{person.person_name}}" >
+            <button type="edit" >Paid for {{payment.due_month}}</button>
+        <!-- <button type="edit">Edit Person details</button> -->
+
+        </form></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
+
+
+
+
+

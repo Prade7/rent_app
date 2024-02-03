@@ -14,10 +14,10 @@ def login():
     else:
         return redirect(url_for("after_login.after_login_function"))
 
-@login_signup.route("/list")
-def list_users():
-    print(User.query.all())
-    return "iucricviuri"
+# @login_signup.route("/list")
+# def list_users():
+#     print(User.query.all())
+#     return "iucricviuri"
 
 def check_already_exist(email_id):
     check_user = User.query.filter_by(email= email_id).first()

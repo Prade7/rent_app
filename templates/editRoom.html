@@ -1,0 +1,16 @@
+{% if person_details %}
+<form method="POST" action="">
+    {{person_details}}
+    <input type="text" class="person-name" name="person-name" placeholder="Enter the person name" value="{{ person_details['name'] }}">
+    <input type="text" class="person-age" name="person-age" placeholder="Enter the age of the person" value="{{ person_details['age'] }}">
+    <input type="textarea" class="person-address" name="person-address" placeholder="Enter the address of the person" value="{{ person_details['address'] }}">
+    <input type="phone" class="person-phone-number" name="person-phone-number" placeholder="Enter the phone number" value="{{ person_details['phone_number'] }}">
+    <label class="day-to-remind">Day to remind</label><input type="number" class="person-day-to-remind" name ='person-day-to-remind' min="1" max="31" required value="{{ person_details['day'] }}"> 
+    <input type="text" placeholder="Enter your Aadhar number"  class="person-aadhar" name="person-aadhar-number" value="{{ person_details['aadhar_number'] }}">
+    <input type="email" placeholder="Enter the persons mail Id" class="person-email" name="person-email" value="{{ person_details['email'] }}">
+    <input type="text" placeholder="Enter the Amount" class="person-amount" name="person-payment-amount" value="{{ person_details['payment_amount'] }}">
+    <button type="submit" class="save-changes">Save Changes</button> 
+</form>
+
+
+{% endif %}

@@ -1,8 +1,8 @@
-from flask import Flask,render_template,url_for,request,redirect,session
-from flask_sqlalchemy import SQLAlchemy
-from datetime import timedelta
-import os
-from start import app,db
+# from flask import Flask,render_template,url_for,request,redirect,session
+# from flask_sqlalchemy import SQLAlchemy
+# from datetime import timedelta
+# import os
+from start import app
 # from dbModels.models import User
 from forms.login_signup import login_signup
 from forms.after_login import after_login
@@ -36,7 +36,7 @@ from forms.after_login import after_login
 #         signup_email = request.form.get("signup-email")
 #         signup_password = request.form.get("signup-password")
 #         print(user_name)
-#         print(signup_email)
+#         print(signup_email)   
 #         exist = check_already_exist(signup_email)
 #         if(exist):
 #             session["user_name"] = user_name
@@ -98,5 +98,4 @@ app.register_blueprint(after_login)
 
 if(__name__=="__main__"):
     app.run(debug=True)
-    with app.app_context():
-        db.create_all()
+ 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payments</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="start_date">Start Date:</label><br>
+        <input type="date" id="start_date" name="start_date"><br>
+        <label for="end_date">End Date:</label><br>
+        <input type="date" id="end_date" name="end_date"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if payments %}
+    <h1>Payments</h1>
+    <table>
+        <tr>
+            <th>Payment ID</th>
+            <th>Paid Date</th>
+            <th>Paid Amount</th>
+            <!-- Add more columns as needed -->
+        </tr>
+        {% for payment in payments %}
+        <tr>
+            <td>{{ payment.payment_id }}</td>
+            <td>{{ payment.paid_date }}</td>
+            <td>{{ payment.paid_amount }}</td>
+            <!-- Add more data as needed -->
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>

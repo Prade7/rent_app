@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% if paid_members %}
+{% for member_details in paid_members %}
+
+<table>
+    <tr>
+        <th>Person name </th>
+        <th>Due month</th>
+        <th>Paid month</th>
+        <th>payment due date</th>
+        <th>paid date</th>
+        <th>Paid Amount</th>
+    </tr>
+    <tr>
+        <td>{{member_details.paid_person_name }}</td>
+        <td>{{member_details.due_month}}</td>
+        <td>{{member_details.paid_month}}</td>
+        <td>{{member_details.payment_due_date}}</td>
+        <td>{{member_details.paid_date}}</td>
+        <td>{{member_details.paid_amount}}</td>
+    </tr>
+</table>
+{% endfor %}
+{% endif %}
+{% endblock %}

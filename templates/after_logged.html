@@ -12,17 +12,16 @@
     {% if list_items %}
     <h3 class="property-list-heading">Property List</h3>
     <ul class="property-list">
-        {% for item in list_items %}
+        {% for property, room_count, person_count in list_items %}
     <li class="property-item">
         <form method="GET" class="property-item-form" action="/addPropertyDetails">
             <div class="property-item-details" onclick="this.parentNode.submit();">
-                <input type="hidden" value="{{item.user_id}}" name="item_id">
-                <input type="hidden" value="{{item.property_id}}" name = "property_id">
-                <h4 class="property-name"> {{ item.property_name }}</h4>
-                <h4>{{item.floor}}</h4>
-                <h4>{{item.room_no}}</h4>
-                <!-- <p class="user-id">User ID: {{ item.user_id }}</p>
-                <p class="property-id">Property ID: {{ item.property_id }}</p> -->
+                <input type="hidden" value="{{property.user_id}}" name="item_id">
+                <input type="hidden" value="{{property.property_id}}" name = "property_id">
+                <h4 class="property-name"> {{ property.property_name }}</h4>
+                
+                <p>Room Count: {{ room_count }}</p>
+    <p>Person Count: {{ person_count }}</p>
             </div>
         </form>
     </li>

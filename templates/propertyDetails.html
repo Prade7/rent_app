@@ -8,6 +8,7 @@ Add rooms
 <form method="POST" >
     <input type="text" class="floor-number" name="floor-number"placeholder="Please enter the floor number " >
     <input type="text" class="room-number" name="room-number" placeholder="Enter the room number">
+    <input type="text" class="room-sharing" name="room-sharing" placeholder="count of sharing" >
     <button type="submit" class="add-room">Add Room</button>
 </form>
 
@@ -21,6 +22,7 @@ Add rooms
             <input type="hidden" value="{{item.room_id}}" name="room_id">
             <h4 class="room-name">Room No: {{ item.room_no }}</h4>
             <h4 class="floor-no">Floor No: {{item.floor}}</h4>
+            <h4 class="sharable-room">Sharable room : {{item.sharableType}}</h4>
             <!-- <p class="user-id">User ID: {{ item.user_id }}</p>
             <p class="property-id">Property ID: {{ item.property_id }}</p> -->
         </div>
