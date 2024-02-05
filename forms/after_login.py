@@ -46,7 +46,7 @@ def get_same_day_next_month(day: int) -> datetime:
 # print(get_upcoming_date(29))  # Output: 29.01.2024
 # print(get_upcoming_date(1))   # Output: 01.02.2024
 
-@after_login.route("/logged",methods=["GET","POST"])
+@after_login.route("/addProperties",methods=["GET","POST"])
 def after_login_function():
     # session.permanent =True
     print("form data ",request.form)
@@ -170,7 +170,7 @@ def edit_delete_person():
         print("name ",request.args.get("person_name"))
         print(request.args.get("payment-amount"))
         print(person_id)
-        print(request.form.get("person-address"))
+        # print(request.form.get("person-address"))
         person_details["name"] = request.args.get("person_name")
         person_details["age"] = request.args.get("person-age")
         person_details["address"] = request.args.get("person-address")
@@ -197,7 +197,7 @@ def edit_delete_person():
         person.aadhar_number = request.form.get("person-aadhar-number")
         person.day = request.form.get("person-day-to-remind")
         nextReminderDate = get_upcoming_date(int(request.form.get("person-day-to-remind")))
-        nextReminderDate = datetime.strptime(nextReminderDate, '%d.%m.%Y').date()
+        # nextReminderDate = datetime.strptime(nextReminderDate, '%d.%m.%Y').date()
         person.next_remainder_date = nextReminderDate
         person.monthly_payment_amount = request.form.get("person-payment-amount")
         db.session.commit()

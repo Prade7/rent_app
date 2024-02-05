@@ -12,7 +12,7 @@ def login():
     if(not session):
         return render_template("login.html")
     else:
-        return redirect(url_for("after_login.after_login_function"))
+        return redirect(url_for("after_login.Home"))
 
 # @login_signup.route("/list")
 # def list_users():
@@ -29,7 +29,7 @@ def check_already_exist(email_id):
 @login_signup.route("/signUp",methods=["GET","POST"])
 def signUp():
     if(session):
-        return redirect(url_for("after_login.after_login_function"))
+        return redirect(url_for("after_login.Home"))
 
     if(request.method=="POST"):
         user_name = request.form.get("user-name")
@@ -43,7 +43,7 @@ def signUp():
             session["email_id"] = signup_email
             session["password"] = signup_password
             session["id"] = exist.id
-            return redirect(url_for("login_signup.logged_in"))
+            return redirect(url_for("login_signup.Home"))
         else:
             create_user = User(user_name= user_name,email=signup_email,password=signup_password)
             db.session.add(create_user)
@@ -53,7 +53,7 @@ def signUp():
             session["password"] = signup_password
             exist = check_already_exist(signup_email)
             session["id"] = exist.id
-            return redirect(url_for("after_login.after_login_function"))
+            return redirect(url_for("after_login.Home"))
     else:
         return render_template("sign_up.html")
 
