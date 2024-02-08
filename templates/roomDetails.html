@@ -9,7 +9,7 @@ ADD person details
 </center> 
 <div class="addPersondiv">
 
- <form method="POST" action = "/addPersonDetails" enctype=multipart/form-data>
+ <form method="POST" action = "/addPersonDetails" enctype="multipart/form-data">
     <input type="text" class="person-name" name="person-name" placeholder="Enter the person name">
     <input type="text" placeholder="Enter father name or mother name " class="person-parent-name" name = "person-parent-name">
     <input type="text" class="person-age" name="person-age" placeholder="Enter the age of the person">
@@ -18,14 +18,15 @@ ADD person details
     <!-- <label class="day-to-remind">Day to remind</label> -->
     <!-- <input type="number" class="person-day-to-remind" name ='person-day-to-remind' min="1" max="31" required placeholder="Day to remind">  -->
     <input type="text" placeholder="Enter your Aadhar number"  class="person-aadhar" name="person-aadhar-number" >
-    <input type=file name=AadharCard>
+    <!-- <input type="file" id="AadharCard" name="AadharCard"accept="image/*"> -->
+    <input type="file" id="pic" name="pic" accept="image/*" required />
     <input type="email" placeholder="Enter the persons mail Id" class="person-email" name="person-email">
     <input type="text" placeholder="Enter the monthly payment Amount" class="person-amount" name="person-payment-amount">
     <input type="text" placeholder="Enter the deposit amount" class="person-deposit-amount" name="person-deposit-amount" >
     <input type="text" placeholder="Enter the Advance Amount" class="person-advance-amount" name="person-advance-amount" >
     <label>next remainder date</label><input type="date" id ="next_remainder_date" name="person-next-remainder-date" required placeholder="pick next remainder date" >
 
-    <button type="submit" class="Add-person" value=Upload >Add</button> 
+    <button type="submit" class="Add-person" >Add</button> 
  </form>
 </div>
 

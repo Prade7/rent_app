@@ -11,7 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import base64
 from flask import send_file
 from io import BytesIO
-
+from werkzeug.utils import secure_filename
 
 after_login = Blueprint("after_login",__name__)
 
@@ -59,7 +59,7 @@ def get_same_day_next_month(day: int) -> datetime:
         return (next_month + relativedelta(months=1, day=1)) - relativedelta(days=1)
 
 # Test the function
-# print(get_same_day_next_month(31))
+print(get_same_day_next_month(31))
 
 
 
@@ -155,12 +155,21 @@ def personDetails():
         next_remainder_date = request.form.get("person-next-remainder-date")
         next_remainder_date = datetime.strptime(next_remainder_date, '%Y-%m-%d').date()
         print(next_remainder_date)
-        file = request.files['AadharCard']
-        image=base64.b64encode(file.read())
+        file = request.files['pic']
+        if not file:
+            return "no pic found",400
+        filename = secure_filename(file.filename)
+        mimetype = file.mimetype
+        if not filename or not mimetype:
+            return "bad upload" , 400
+
+        # image=base64.b64encode(file.read())
+        # encoded_image_data = image.encode('utf-8')
         # current_date = datetime.now().date()
         # nextReminderDate = get_upcoming_date(day_to_remind)
         # nextReminderDate = datetime.strptime(nextReminderDate, '%d.%m.%Y').date()
-        add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = next_remainder_date,person_email = paymentEmail,parentName = parentName , deposit_amount = deposit ,advanceAmount  = advance_amount)
+        # image = db.Column(db.LargeBinary, nullable=True)
+        add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = next_remainder_date,person_email = paymentEmail,parentName = parentName , deposit_amount = deposit ,advanceAmount  = advance_amount, image = file.read(),imgName = filename,mimeType = mimetype)
         db.session.add(add_person)
         db.session.commit()
         # payment = Payments(payer_Id = session["id"])
