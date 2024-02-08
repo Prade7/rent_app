@@ -2,24 +2,33 @@
 {% block link %}
 <link rel="stylesheet" href="{{url_for('static',filename = 'roomDetails.css')}}">
 {% endblock %}
-
 {% block content %}
 <center><h4>
-
 ADD person details
 </h4>
 </center> 
- <form method="POST" action = "/addPersonDetails">
+<div class="addPersondiv">
+
+ <form method="POST" action = "/addPersonDetails" enctype=multipart/form-data>
     <input type="text" class="person-name" name="person-name" placeholder="Enter the person name">
+    <input type="text" placeholder="Enter father name or mother name " class="person-parent-name" name = "person-parent-name">
     <input type="text" class="person-age" name="person-age" placeholder="Enter the age of the person">
     <input type="textarea" class="person-address" name="person-address" placeholder="Enter the address of the person">
     <input type="phone" class="person-phone-number" name="person-phone-number" placeholder="Enter the phone number">
-    <label class="day-to-remind">Day to remind</label><input type="number" class="person-day-to-remind" name ='person-day-to-remind' min="1" max="31" required> 
+    <!-- <label class="day-to-remind">Day to remind</label> -->
+    <!-- <input type="number" class="person-day-to-remind" name ='person-day-to-remind' min="1" max="31" required placeholder="Day to remind">  -->
     <input type="text" placeholder="Enter your Aadhar number"  class="person-aadhar" name="person-aadhar-number" >
+    <input type=file name=AadharCard>
     <input type="email" placeholder="Enter the persons mail Id" class="person-email" name="person-email">
-    <input type="text" placeholder="Enter the Amount" class="person-amount" name="person-payment-amount">
-    <button type="submit" class="Add-person" >Add</button> 
+    <input type="text" placeholder="Enter the monthly payment Amount" class="person-amount" name="person-payment-amount">
+    <input type="text" placeholder="Enter the deposit amount" class="person-deposit-amount" name="person-deposit-amount" >
+    <input type="text" placeholder="Enter the Advance Amount" class="person-advance-amount" name="person-advance-amount" >
+    <label>next remainder date</label><input type="date" id ="next_remainder_date" name="person-next-remainder-date" required placeholder="pick next remainder date" >
+
+    <button type="submit" class="Add-person" value=Upload >Add</button> 
  </form>
+</div>
+
  {% if person_details %}
 <h3 class="person-details-heading">Person details</h3>
 <ul class="room-list">
@@ -29,6 +38,8 @@ ADD person details
         <div class="person-details" >
             <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
             <h4 class="person-name" >Person name: {{ person.person_name }}</h4>
+            <input type="hidden" value="{{person.parentName}}" name="person_parent_name"> 
+            <h4>Parent Name :{{person.parentName}}</h4>
             <h4 class="person-age" name ="person-age" value="{{person.age}}">Person Age: {{person.age}}</h4>
             <h4 class="person-address" name="person-address" value="{{person.address}}">address : {{person.address}}</h4>
             <h4 class="person-email" name="person-email" value="{{person.person_email}}"> email : {{person.person_email}}</h4>
@@ -37,28 +48,35 @@ ADD person details
             <h4>Next payment date : {{ person.next_remainder_date}}</h4>
             <h4  class="person-amount" name="person-amount" value="{{person.monthly_payment_amount}}">Payment amount : {{person.monthly_payment_amount}}</h4>
             <input type="hidden" value="{{person.monthly_payment_amount}}" name="payment-amount">
-            <input type="hidden" name="payment-date" value="{{person.next_remainder_date}}">
+            <input type="hidden" name="payment-date" value="{{person.next_remainder_date}}" >
             <input type="hidden" value="{{ person.person_name }}" name="person_name">
             <input type="hidden" value="{{person.phone_number}}" name="person-number">
             <input type="hidden" value="{{person.aadhar_number}}" name="person-aadhar">
-            <input type="hidden" value="{{person.monthly_payment_amount}}" name="next-payment-date">
             <input type="hidden" value="{{person.age}}" name="person-age">
             <input type="hidden" value="{{person.address}}" name="person-address" > 
             <input type="hidden" value="{{person.person_email}}" name="person-email">
+            <input type="hidden" name="person_advance" value="{{person.advanceAmount}}" name="person-advance"> 
+            <h4 class="person-advance" name="person-advance" > Advance amount : {{person.advanceAmount}}</h4>
+            <input type="hidden" name="person_deposit" value="{{person.deposit_amount}}" name="person-deposit">
+            <h4 class="person-deposit" name="person-deposit" >Deposit Amount : {{person.deposit_amount}}</h4>
             <input type="hidden" name="day" value="{{person.day}}">
-            <h4><button type="submit" name="edit-delete" value="edit">Edit</button></h4>
-
-            </form>
+            <input type="hidden" name="home" value="{{False}}">
+            {%  if user and user.image %}
+            <img src="{{ url_for('display_image') }}" alt="User Image">
+            {% endif %}
+            <h4><button type="submit" name="edit-delete" value="edit">Edit</button></h4> </form>
            <form method="POST" action="/delete">
             <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
             <h4><button type="submit" name="edit-delete" value="delete" >Delete</button></h4>
            </form>
-
-        </div>
-       
-</li>
+        </div></li>
 {% endfor %}
-
 </ul>
  {% endif %}
+ <script>
+    var today = new Date();
+    today.setDate(today.getDate() + 1); // set 'today' to tomorrow's date
+    var tomorrow = today.toISOString().split('T')[0];
+    document.getElementById('next_remainder_date').min = tomorrow;
+    </script>
 {% endblock %}

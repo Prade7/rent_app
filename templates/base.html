@@ -24,19 +24,20 @@
           height: 100%;
           width: 0;
           position: fixed;
-          z-index: 1;
+          z-index: 99999;
           top: 0;
           left: 0;
           background-color: #111;
           overflow-x: hidden;
           transition: 0.5s;
           padding-top: 60px;
+
         }
         
         .navbar a {
           padding: 8px 8px 8px 32px;
           text-decoration: none;
-          font-size: 25px;
+          font-size: 20px;
           color: #818181;
           display: block;
           transition: 0.3s;
@@ -64,6 +65,7 @@
           position: absolute;
           top: 10px;
           left: 10px;
+          
         }
         
         .openbtn:hover {
@@ -79,10 +81,10 @@
         
         <div id="myNavbar" class="navbar">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-          <a href="#">Home</a>
-          <a href="#">Add Properties</a>
-          <a href="#">All Payment History</a>
-          <a href="#">Monthly Payment History</a>
+          <a href="/home">Home</a>
+          <a href="/addProperties">Add Properties</a>
+          <a href="/paid_members">All Payment History</a>
+          <a href="/payments_based_on_month">Monthly Payment History</a>
           <a href="#">About Developers</a>
         </div>
         

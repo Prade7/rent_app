@@ -36,14 +36,19 @@ class Persons(db.Model):
     phone_number = db.Column(db.String(20))
     person_email = db.Column(db.String(25),nullable=True)
     aadhar_number = db.Column(db.String(25),nullable=True)
-    day = db.Column(db.Integer,nullable = False)
+    # day = db.Column(db.Integer,nullable = False)
+    image = db.Column(db.LargeBinary, nullable=True)
     next_remainder_date = db.Column(db.Date,nullable= True)
     monthly_payment_amount = db.Column(db.String(20),nullable =True)
     due_month = db.Column(db.String(20),nullable= True)
+    parentName = db.Column(db.String(20),nullable=True)
+    deposit_amount = db.Column(db.String(20),nullable=True)
+    advanceAmount = db.Column(db.String(20),nullable=True)
     persons_room = db.Column(db.Integer,db.ForeignKey("rooms_details.room_id"))
     user_id_details = db.Column(db.Integer, db.ForeignKey('login_details.id'))
 
 class Payments(db.Model):
+    __table_name__ = "payments"
     payment_id = db.Column(db.Integer,primary_key = True)
     user_id_details = db.Column(db.Integer, db.ForeignKey('login_details.id'))
     persons_room_payments = db.Column(db.Integer,db.ForeignKey("rooms_details.room_no"))

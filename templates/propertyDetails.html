@@ -1,36 +1,47 @@
 {% extends 'base.html' %}
+
 {% block link %}
 <link rel="stylesheet" href="{{url_for('static',filename = 'propertyDetails.css')}}">
 {% endblock %}
 
 {% block content %}
-Add rooms
-<form method="POST" >
-    <input type="text" class="floor-number" name="floor-number"placeholder="Please enter the floor number " >
-    <input type="text" class="room-number" name="room-number" placeholder="Enter the room number">
-    <input type="text" class="room-sharing" name="room-sharing" placeholder="count of sharing" >
-    <button type="submit" class="add-room">Add Room</button>
-</form>
+<div class="add-property">
+    <!-- <h2 class="add-property-heading">Add Rooms</h2> -->
+    <form method="POST" class="add-room-form">
+        <!-- <label for="floor-number">Floor Number:</label> -->
+        <input type="text" id="floor-number" class="input-field" name="floor-number" placeholder="Please enter the floor number " required>
+        
+        <!-- <label for="room-number">Room Number:</label> -->
+        <input type="text" id="room-number" class="input-field" name="room-number" placeholder="Enter the room number" required>
+        
+        <!-- <label for="room-sharing">Count of Sharing:</label> -->
+        <input type="text" id="room-sharing" class="input-field" name="room-sharing" placeholder="count of sharing" required>
+        <center>
 
-{% if room_list %}
-<h3 class="room-list-heading">Room List</h3>
-<ul class="room-list">
-    {% for item in room_list %}
-<li class="room-item">
-    <form method="GET" class="room-item-form" action="/addPersonDetails">
-        <div class="room-item-details" onclick="this.parentNode.submit();">
-            <input type="hidden" value="{{item.room_id}}" name="room_id">
-            <h4 class="room-name">Room No: {{ item.room_no }}</h4>
-            <h4 class="floor-no">Floor No: {{item.floor}}</h4>
-            <h4 class="sharable-room">Sharable room : {{item.sharableType}}</h4>
-            <!-- <p class="user-id">User ID: {{ item.user_id }}</p>
-            <p class="property-id">Property ID: {{ item.property_id }}</p> -->
-        </div>
+        <button type="submit" class="add-room">Add Room</button>
+    </center>
+
     </form>
-</li>
-{% endfor %}
+</div>
 
-</ul>
-{% endif %}
-
+    {% if room_list %}
+        <center>
+    <h3 class="room-list-heading">
+        Room List</h3></center>
+    <ul class="room-list">
+        {% for item in room_list %}
+        <li class="room-item card">
+            <form method="GET" class="room-item-form" action="/addPersonDetails">
+                <div class="room-item-details card-details" onclick="this.parentNode.submit();">
+                    <input type="hidden" value="{{item.room_id}}" name="room_id">
+                    <h4 class="room-name text-title">Room No: {{ item.room_no }}</h4>
+                    <h4 class="floor-no text-body">Floor No: {{item.floor}}</h4>
+                    <h4 class="sharable-room text-body">Sharable room : {{item.sharableType}}</h4>
+                    <button class="card-button">Add person details</button>
+                </div>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 {% endblock %}

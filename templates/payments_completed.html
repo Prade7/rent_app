@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Payments</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static', filename = 'payments_completed.css')}}" /> 
+{% endblock %}
+{% block content %}
     <form method="POST">
         <label for="start_date">Start Date:</label><br>
         <input type="date" id="start_date" name="start_date"><br>
@@ -13,23 +12,25 @@
     </form>
 
     {% if payments %}
-    <h1>Payments</h1>
     <table>
         <tr>
-            <th>Payment ID</th>
+            <!-- <th>Payment ID</th> -->
             <th>Paid Date</th>
             <th>Paid Amount</th>
+            <th>Paid Person</th>
+            <th>Due Date</th>
             <!-- Add more columns as needed -->
         </tr>
         {% for payment in payments %}
         <tr>
-            <td>{{ payment.payment_id }}</td>
+            <!-- <td>{{ payment.payment_id }}</td> -->
             <td>{{ payment.paid_date }}</td>
             <td>{{ payment.paid_amount }}</td>
+            <td>{{ payment.person.person_name }}</td>
+            <td>{{ payment.payment_due_date }}</td>
             <!-- Add more data as needed -->
         </tr>
         {% endfor %}
     </table>
     {% endif %}
-</body>
-</html>
+{% endblock %}

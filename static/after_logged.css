@@ -26,9 +26,15 @@ body {
     margin-bottom: 20px;
 }
 
-.input-field,
+.input-field{
+        width: 50%; /* Reduced size */
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+}
+
 .submit-button {
-    width: 60%; /* Reduced size */
+    width: 30%; /* Reduced size */
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
@@ -50,16 +56,36 @@ body {
     flex-wrap: wrap;
     justify-content: space-around;
     list-style-type: none;
+    padding: 0; /* Add this line */
+}
+.property-item {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 13px;   
+    z-index: 1111;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease-in-out;
+    margin: 10px; /* Add this line */
 }
 
-.property-item {
-    flex-basis: calc(16.66% - 20px); /* For 6 items per row */
-    background-color: #23211e; /* Azure */
-    border: 2px solid  #ff5e62;/* Teal */
-    border-radius: 10px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform .2s;
+.property-item::before {
+    content: "";
+    position: absolute;
+    top: 0; /* Adjusted to align with the .property-item */
+    left: 0; /* Adjusted to align with the .property-item */
+    width: 125px; /* Adjusted to align with the .property-item */
+    height: 200px; /* Adjusted to align with the .property-item */
+    border-radius: 13px; /* Adjusted to align with the .property-item */
+    background-color: #ff0000;
+    opacity: 1;
+    filter: blur(12px);
+    animation: blob-bounce 5s infinite ease;
+    z-index: 1;
 }
 
 .property-item:hover {
@@ -67,7 +93,18 @@ body {
 }
 
 .property-item-details {
+    position: absolute;
+    top: 5px;
+    left: 6px;
+    width: 150px;
+    height: 190px;
+    z-index: 2;
+    background: rgba(255, 255, 255, .95);
+    backdrop-filter: blur(24px);
+    border-radius: 10px;
+    overflow: hidden;
     padding: 20px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .property-name {
@@ -75,19 +112,27 @@ body {
     color: #ff5e62; /* Teal */
 }
 
+@keyframes blob-bounce {
+    0% {
+        transform: translate(-50%, -50%) translate3d(0, 0, 0);
+    }
 
-.input-field,
-.submit-button {
-    width: 30%; /* Reduced size */
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
+    25% {
+        transform: translate(-50%, -50%) translate3d(100%, 0, 0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) translate3d(100%, 100%, 0);
+    }
+
+    75% {
+        transform: translate(-50%, -50%) translate3d(0, 100%, 0);
+    }
+
+    100% {
+        transform: translate(-100%, -100%) translate3d(0, 0, 0);
+    }
 }
-
-.submit-button{
-    width: 20%;
-}
-
 
 @media (max-width: 1200px) {
     .property-item {
@@ -106,3 +151,12 @@ body {
         flex-basis: 100%; /* For 1 item per row */
     }
 }
+
+
+
+
+
+
+
+
+

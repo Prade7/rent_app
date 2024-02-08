@@ -43,7 +43,7 @@ def signUp():
             session["email_id"] = signup_email
             session["password"] = signup_password
             session["id"] = exist.id
-            return redirect(url_for("login_signup.Home"))
+            return redirect(url_for("login_signup.login"))
         else:
             create_user = User(user_name= user_name,email=signup_email,password=signup_password)
             db.session.add(create_user)

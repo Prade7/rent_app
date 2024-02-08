@@ -2,6 +2,15 @@ body {
     background-color: #f2f2f2;
 }
 
+
+.center-container {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    height: 100vh; /* full height of the viewport */
+}
+
+
 .login-form {
     width: 90%;
     max-width: 300px;

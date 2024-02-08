@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -5,70 +6,109 @@ body {
     background-color: #f4f4f4;
 }
 
-form {
-    width: 80%;
-    margin: 20px auto;
+.addPersondiv form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-input[type="text"], input[type="textarea"], input[type="phone"] {
+.addPersondiv input[type="text"], 
+.addPersondiv input[type="textarea"], 
+.addPersondiv input[type="phone"], 
+.addPersondiv input[type="number"], 
+.addPersondiv input[type="email"] {
     width: 100%;
-    padding: 15px;
-    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
     box-sizing: border-box;
 }
 
-button {
-    width: 100%;
-    padding: 15px;
-    background-color: #2c3e50;
-    color: white;
+.addPersondiv .Add-person {
+    width: 50%;
+    padding: 10px;
+    border-radius: 5px;
     border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.addPersondiv .Add-person:hover {
+    background-color: #0056b3;
+}
+
+h3, h4 {
+    color: #2c3e50;
 }
 
 h3 {
     text-align: center;
-    color: #2c3e50;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+h4 {
+    margin-bottom: 8px; 
+    font-size: 1em; /* Reduced font size */
 }
 
-li {
-    background-color: #fff;
-    color: #333;
-    margin-bottom: 10px;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-
-ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-li {
-    flex-basis: calc(50% - 10px); /* Subtract the margin */
-}
-
-
-ul {
+ul.room-list {
+    list-style-type: none; /* This removes the bullet points */
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;
+    padding: 90px; /* This removes the default padding */
+    grid-template-columns: repeat(2, 1fr); /* Changed from 3 to 2 */
 }
+
+li.room-item {
+    background-color: #f9f9f9; /* Pale white background */
+    color: #333;
+    margin-bottom: 5px;
+    padding: 15px; 
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #ddd; 
+    font-size: 1em; 
+    padding-right: -50px;
+}
+
+button[type="submit"] {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
 center {
     text-align: center;
-    color: #2c3e50;
     font-size: 1.5em;
 }
 
 @media screen and (max-width: 600px) {
-    form {
+    .addPersondiv form {
         width: 100%;
+    }
+
+    ul.room-list {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    li.room-item {
+        padding: 10px;
     }
 }

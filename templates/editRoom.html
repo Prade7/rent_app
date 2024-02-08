@@ -1,16 +1,53 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename = 'editRoom.css')}}">
+{% endblock %}
+
+{% block content %}
 {% if person_details %}
+<!-- {{person_details}} -->
 <form method="POST" action="">
-    {{person_details}}
-    <input type="text" class="person-name" name="person-name" placeholder="Enter the person name" value="{{ person_details['name'] }}">
-    <input type="text" class="person-age" name="person-age" placeholder="Enter the age of the person" value="{{ person_details['age'] }}">
-    <input type="textarea" class="person-address" name="person-address" placeholder="Enter the address of the person" value="{{ person_details['address'] }}">
-    <input type="phone" class="person-phone-number" name="person-phone-number" placeholder="Enter the phone number" value="{{ person_details['phone_number'] }}">
-    <label class="day-to-remind">Day to remind</label><input type="number" class="person-day-to-remind" name ='person-day-to-remind' min="1" max="31" required value="{{ person_details['day'] }}"> 
-    <input type="text" placeholder="Enter your Aadhar number"  class="person-aadhar" name="person-aadhar-number" value="{{ person_details['aadhar_number'] }}">
-    <input type="email" placeholder="Enter the persons mail Id" class="person-email" name="person-email" value="{{ person_details['email'] }}">
-    <input type="text" placeholder="Enter the Amount" class="person-amount" name="person-payment-amount" value="{{ person_details['payment_amount'] }}">
+    <label for="person-name">Person Name</label>
+    <input type="text" id="person-name" name="person-name" placeholder="Enter the person name" value="{{ person_details['name'] }}">
+
+    <label for="person-parent-name">Parent Name</label>
+    <input type="text" id="person-parent-name" name="person_parent_name" placeholder="Enter the Parent name" value="{{ person_details['parent_name'] }}">   
+
+    <label for="person-age">Age</label>
+    <input type="text" id="person-age" name="person-age" placeholder="Enter the age of the person" value="{{ person_details['age'] }}">
+
+    <label for="person-address">Address</label>
+    <input type="textarea" id="person-address" name="person-address" placeholder="Enter the address of the person" value="{{ person_details['address'] }}">
+
+    <label for="person-phone-number">Phone Number</label>
+    <input type="phone" id="person-phone-number" name="person-phone-number" placeholder="Enter the phone number" value="{{ person_details['phone_number'] }}">
+
+    <label for="person-next-remainder-date">Next remainder date</label>
+    <input type="date" id="person-date-to-remind" name ='payment-date'  required value="{{ person_details['next_payment_date'] }}" min="" required > 
+
+    <label for="person-aadhar-number">Aadhar Number</label>
+    <input type="text" id="person-aadhar-number" placeholder="Enter your Aadhar number"  class="person-aadhar" name="person-aadhar-number" value="{{ person_details['aadhar_number'] }}">
+
+    <label for="person-email">Email</label>
+    <input type="email" id="person-email" placeholder="Enter the persons mail Id" class="person-email" name="person-email" value="{{ person_details['email'] }}">
+
+    <label for="person-payment-amount">Payment Amount</label>
+    <input type="text" id="person-payment-amount" placeholder="Enter the Amount" class="person-amount" name="person-payment-amount" value="{{ person_details['payment_amount'] }}">
+
+    <label for="person_deposit">Deposit</label>
+    <input type="text" id="person_deposit" placeholder="Enter the deposit" class="person-deposit" name="person_deposit" value="{{ person_details['deposit_amount'] }}" >
+
+    <label for="person_advance">Advance</label>
+    <input type="text" id="person_advance" placeholder="Enter the advance" class="person-advance" name="person_advance" value="{{ person_details['advanceAmount'] }}" >   
+
     <button type="submit" class="save-changes">Save Changes</button> 
 </form>
-
-
+<script>
+    var today = new Date();
+    today.setDate(today.getDate() + 1); // set 'today' to tomorrow's date
+    var tomorrow = today.toISOString().split('T')[0];
+    document.getElementById('person-date-to-remind').min = tomorrow;
+    </script>
 {% endif %}
+
+{% endblock %}

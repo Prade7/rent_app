@@ -6,93 +6,142 @@ body {
     background-color: #F5F5F5; /* Light Gray */
 }
 
-.add-room {
-    width: 10%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px;  /* Reduced from 20px to 10px */
-}
-
-
-.add-room-heading,
-.room-list-heading {
-    text-align: center;
-    color: #ff5e62; /* Teal */
-}
-
-.add-room-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.floor-number,
-.room-number,
-.add-room-button {
-    width: 30%; /* Reduced size */
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
-
-.floor-number,
-.room-number {
-    border: 1px solid #ff5e62; /* Teal */
-}
-
-.add-room-button {
-    border: none;
-    background-color:  #ff5e62; /* Teal */
-    color: white;
-    cursor: pointer;
+.card {
+    width: calc(25% - 5%); /* Adjusted size for 4 cards per row */
+    height: 160px; /* Reduced size */
+    border-radius: 20px;
+    background: #f5f5f5;
+    position: relative;
+    padding: 1.2rem; /* Reduced padding */
+    border: 2px solid #c3c6ce;
+    transition: 0.5s ease-out;
+    overflow: visible;
+    margin: 2%; /* Increased margin */
 }
 
 .room-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    list-style-type: none;
+    justify-content: space-between; /* Aligns cards in a row */
+    list-style-type: none; /* Removes bullet points */
 }
 
-.room-item {
-    flex-basis: calc(16.66% - 20px); /* For 6 items per row */
-    background-color: #23211e; /* Azure */
-    border: 2px solid  #ff5e62;/* Teal */
-    border-radius: 10px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform .2s;
+.card-button {
+    transform: translate(-50%, 125%);
+    width: 60%;
+    border-radius: 1rem;
+    border: none;
+    background-color: #008bf8;
+    color: #fff;
+    font-size: 1rem;
+    padding: .5rem 1rem;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transition: 0.3s ease-out;
 }
 
-.room-item:hover {
-    transform: scale(1.05);
+.text-body {
+    color: rgb(134, 134, 134);
 }
 
-.room-item-form {
+.text-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.card:hover {
+    border-color: #008bf8;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.card:hover .card-button {
+    transform: translate(-50%, 50%);
+    opacity: 1;
+}
+
+
+/* Form Styles */
+.add-property {
+    width: 100%;
+    max-width: 100%; /* Make the form full width */
+    margin: 0 auto;
     padding: 20px;
+    box-shadow: none; /* Remove the shadow */
+    border-radius: 0; /* Remove the border radius */
 }
 
-.room-name,
-.floor-no {
-    margin: 0;
-    color: #ff5e62; /* Teal */
+.add-property-heading {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
 }
 
-@media (max-width: 1200px) {
-    .room-item {
-        flex-basis: calc(20% - 20px); /* For 5 items per row */
+.add-room-form {
+    display: flex;
+    flex-direction: column;
+}
+.input-field {
+    margin: 10px auto; /* Center the input fields */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%; /* Reduce the width */
+    max-width: 300px; /* Adjust this value as needed */
+}
+
+.add-room {
+    margin: 20px auto; /* Center the button */
+    padding: 8px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: block; /* Make the button a block element */
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 80%; /* Adjust this value as needed */
+    max-width: 200px; /* Adjust this value as needed */
+}
+
+.add-room:hover {
+    background-color: #45a049;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    .add-property {
+        width: 100%;
+    }
+
+    .input-field {
+        font-size: 14px;
+    }
+
+    .add-room {
+        font-size: 14px;
     }
 }
 
-@media (max-width: 992px) {
-    .room-item {
-        flex-basis: calc(50% - 20px); /* For 2 items per row */
+
+
+@media screen and (max-width: 600px) {
+    .card {
+        width: 100%; /* Full width on mobile */
     }
 }
 
-@media (max-width: 576px) {
-    .room-item {
-        flex-basis: 100%; /* For 1 item per row */
+@media screen and (min-width: 600px) {
+    .card {
+        width: calc(50% - 4%); /* 2 cards in a row on tablet and larger */
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .card {
+        width: calc(25% - 4%); /* 4 cards in a row on desktop and larger */
     }
 }

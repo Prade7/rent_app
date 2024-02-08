@@ -1,5 +1,13 @@
 body {
     background-color: #f2f2f2;
+    
+}
+
+.center-container {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    height: 100vh; /* full height of the viewport */
 }
 
 .signup-form {
@@ -19,7 +27,7 @@ body {
 }
 
 .signup-form input[type="text"], .signup-form input[type="email"], .signup-form input[type="password"] {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
@@ -27,13 +35,14 @@ body {
 }
 
 .signup-form button {
-    width: 100%;
+    width: 80%;
     padding: 10px;
     border: none;
     border-radius: 5px;
     background-color: #8c52ff;
     color: #fff;
     cursor: pointer;
+    margin-left: 20px;
 }
 
 .signup-form button:hover {

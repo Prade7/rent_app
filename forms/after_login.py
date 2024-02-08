@@ -8,11 +8,32 @@ from sqlalchemy import and_, or_
 from sqlalchemy.orm import joinedload
 from sqlalchemy import desc
 from apscheduler.schedulers.background import BackgroundScheduler
-
-
+import base64
+from flask import send_file
+from io import BytesIO
 
 
 after_login = Blueprint("after_login",__name__)
+
+
+
+
+def get_next_month_date(date_string):
+    # Convert the string to a date object
+    date = datetime.strptime(date_string, '%Y-%m-%d')
+    # Try to get the same day of next month
+    try:
+        next_month_date = date.replace(month = date.month % 12 + 1)
+    except ValueError:
+        # This happens when the next month has fewer days
+        # In this case, get the last day of next month
+        next_month_date = (date.replace(month = date.month % 12 + 2, day = 1) - timedelta(days = 1))
+    return next_month_date.strftime('%Y-%m-%d')
+
+# # Test the function
+# print(get_next_month_date('2024-01-31'))  # Output: '2024-02-29'
+# print(get_next_month_date('2024-02-29'))  # Output: '2024-03-29'
+
 
 def get_upcoming_date(day: int) -> str:
     today = datetime.today()
@@ -114,9 +135,10 @@ def personDetails():
     if(room_id):
         session["room"] = room_id
     if(request.method == "GET"):
-
         person_details = Persons.query.filter_by(user_id_details = session["id"],persons_room=session["room"])
-
+        for person in person_details:
+            if(person.image):
+                person.image = base64.b64encode(person.image).decode('utf-8')
         return render_template("roomDetails.html",person_details=person_details)
     else:
         personName = request.form.get("person-name")
@@ -126,17 +148,37 @@ def personDetails():
         aadharNumber = request.form.get("person-aadhar-number")
         paymentAmount = request.form.get("person-payment-amount")
         paymentEmail = request.form.get("person-email")
-        day_to_remind = int(request.form.get("person-day-to-remind"))
+        # day_to_remind = int(request.form.get("person-day-to-remind"))
+        parentName = request.form.get("person-parent-name")
+        deposit  = request.form.get("person-deposit-amount")
+        advance_amount = request.form.get("person-advance-amount")
+        next_remainder_date = request.form.get("person-next-remainder-date")
+        next_remainder_date = datetime.strptime(next_remainder_date, '%Y-%m-%d').date()
+        print(next_remainder_date)
+        file = request.files['AadharCard']
+        image=base64.b64encode(file.read())
         # current_date = datetime.now().date()
-        nextReminderDate = get_upcoming_date(day_to_remind)
+        # nextReminderDate = get_upcoming_date(day_to_remind)
         # nextReminderDate = datetime.strptime(nextReminderDate, '%d.%m.%Y').date()
-        add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = nextReminderDate, day = day_to_remind,person_email = paymentEmail)
+        add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = next_remainder_date,person_email = paymentEmail,parentName = parentName , deposit_amount = deposit ,advanceAmount  = advance_amount)
         db.session.add(add_person)
         db.session.commit()
         # payment = Payments(payer_Id = session["id"])
         # db.session.add(payment)
         # db.session.commit()
         return redirect(url_for("after_login.personDetails"))
+
+
+
+
+# @after_login.route('/display')
+# def display_image():
+#     user = Persons.query.filter_by(user_id_details = session["id"]).first()
+#     if user and user.image:
+#         return send_file(BytesIO(user.image), mimetype='image/jpeg')
+#     else:
+#         return "No image found for user with id {}".format(id)
+
 
 @after_login.route("/paid",methods=["POST","GET"])
 def paid():
@@ -175,12 +217,16 @@ def edit_delete_person():
         person_details["age"] = request.args.get("person-age")
         person_details["address"] = request.args.get("person-address")
         person_details["payment_amount"] = request.args.get("payment-amount")
-        person_details["next_payment_date"] = request.args.get("next-payment-date")
+        person_details["next_payment_date"] = request.args.get("payment-date")
+        person_details["email"] = request.args.get("person-email")
         person_details["aadhar_number"] = request.args.get("person-aadhar")
         person_details["phone_number"] = request.args.get("person-number")
-        person_details["day"] = request.args.get("day")
+        # person_details["day"] = request.args.get("day")
         person_details["email"] =request.args.get("person-email")
-        if(request.args.get("home")):
+        person_details["parent_name"] = request.args.get("person_parent_name")
+        person_details["deposit_amount"] = request.args.get("person_deposit")
+        person_details["advanceAmount"] = request.args.get("person_advance")    
+        if(request.args.get("home")=='redirect_to_home' ):
             session["redirect_to_home"] = True
         return render_template("editRoom.html",person_details = person_details)
         
@@ -195,13 +241,18 @@ def edit_delete_person():
         person.phone_number = request.form.get("person-phone-number")
         person.person_email = request.form.get("person-email")
         person.aadhar_number = request.form.get("person-aadhar-number")
-        person.day = request.form.get("person-day-to-remind")
-        nextReminderDate = get_upcoming_date(int(request.form.get("person-day-to-remind")))
+        # person.day = request.form.get("person-day-to-remind")
+        # nextReminderDate = get_upcoming_date(request.form.get("person-day-to-remind"))
         # nextReminderDate = datetime.strptime(nextReminderDate, '%d.%m.%Y').date()
-        person.next_remainder_date = nextReminderDate
+        print(request.form.get('payment-date'),"payment date")
+        remainder_date = datetime.strptime(request.form.get('payment-date'), '%Y-%m-%d').date()
+        person.next_remainder_date = remainder_date
         person.monthly_payment_amount = request.form.get("person-payment-amount")
+        person.parentName = request.form.get("person_parent_name")
+        person.advanceAmount = request.form.get("person_advance")
+        person.deposit_amount = request.form.get("person_deposit")
         db.session.commit()
-        if(session["redirect_to_home"]==True):
+        if(session.get("redirect_to_home")==True):
             session["redirect_to_home"] = False
             return redirect(url_for("after_login.Home"))
         else:
@@ -311,7 +362,9 @@ def check_and_update_payments():
                 print(payment.user_id_details)
                 print(payment.person_id)
                 person.due_month = upcoming_date.strftime("%b%y")
-                person.next_remainder_date = get_same_day_next_month(person.day)
+                next_remainder_date = get_next_month_date(str(person.next_remainder_date))
+                next_remainder_date = datetime.strptime(next_remainder_date, '%Y-%m-%d').date()
+                person.next_remainder_date =next_remainder_date
                 print("after payment insert")
                 db.session.add(payment)
     db.session.commit()
@@ -380,7 +433,7 @@ def paymentsTable():
 
 @after_login.route("/paid_members")
 def paidMembers():
-    paid_members  = Persons.query.filter_by(user_details_id = session["id"], paid =True)
+    paid_members  = Payments.query.filter_by(user_id_details = session["id"], paid =True)
     return render_template("paid_members.html", paid_members =paid_members)
 
 

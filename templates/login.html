@@ -1,21 +1,25 @@
+{% extends 'base.html' %}
+
 {% block link %}
 <link rel="stylesheet" href="{{url_for('static',filename = 'login.css')}}">
 {% endblock %}
 
-{% extends 'base.html' %}
+{% block navbar %}
+{% endblock %}
 
 {% block content %}
-<form class="login-form" action="/login" method="post">
-    <label ><b>LOG-IN </b></label>
-    <input type="email" class="login-email" placeholder="Enter your mail id" name="login-email" required >
-    <input type="password"  class="login-password" placeholder="Enter your password" name="login-password">
-    <!-- <input type="button" class ="login-submit" value="submit"> -->
-    <button class="login-submit" >submit</button> 
-    <h5 class="login-h5">
-    Don't have an account
-</h5>
-    <b>
-    <a href="/signUp" class="login-form-signup">Sign up</a></b> 
-</form>
-
+<div class="center-container">
+    <form class="login-form" action="/login" method="post">
+        <label ><b>LOG-IN </b></label>
+        <input type="email" class="login-email" placeholder="Enter Registered Mail ID" name="login-email" required >
+        <input type="password"  class="login-password" placeholder="Enter your password" name="login-password">
+        <!-- <input type="button" class ="login-submit" value="submit"> -->
+        <button class="login-submit" >Submit</button> 
+        <h5 class="login-h5">
+        Don't have an account
+        </h5>
+        <b>
+        <a href="/signUp" class="login-form-signup">Sign up</a></b> 
+    </form>
+</div>
 {% endblock %}
