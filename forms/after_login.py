@@ -9,9 +9,11 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import desc
 from apscheduler.schedulers.background import BackgroundScheduler
 import base64
-from flask import send_file
+from flask import send_file,jsonify ,abort
 from io import BytesIO
 from werkzeug.utils import secure_filename
+from sqlalchemy import func
+
 
 after_login = Blueprint("after_login",__name__)
 
@@ -156,12 +158,16 @@ def personDetails():
         next_remainder_date = datetime.strptime(next_remainder_date, '%Y-%m-%d').date()
         print(next_remainder_date)
         file = request.files['pic']
-        if not file:
-            return "no pic found",400
-        filename = secure_filename(file.filename)
-        mimetype = file.mimetype
-        if not filename or not mimetype:
-            return "bad upload" , 400
+        if file:
+            
+            filename = secure_filename(file.filename)
+            mimetype = file.mimetype
+            add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = next_remainder_date,person_email = paymentEmail,parentName = parentName , deposit_amount = deposit ,advanceAmount  = advance_amount, image = file.read(),imgName = filename,mimeType = mimetype)
+
+        else:
+            add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = next_remainder_date,person_email = paymentEmail,parentName = parentName , deposit_amount = deposit ,advanceAmount  = advance_amount)
+
+        # s
 
         # image=base64.b64encode(file.read())
         # encoded_image_data = image.encode('utf-8')
@@ -169,7 +175,6 @@ def personDetails():
         # nextReminderDate = get_upcoming_date(day_to_remind)
         # nextReminderDate = datetime.strptime(nextReminderDate, '%d.%m.%Y').date()
         # image = db.Column(db.LargeBinary, nullable=True)
-        add_person = Persons(person_name =personName,age = personAge,aadhar_number = aadharNumber,monthly_payment_amount = paymentAmount,address =personAddress,phone_number =personPhone,user_id_details = session["id"],persons_room=session["room"],next_remainder_date = next_remainder_date,person_email = paymentEmail,parentName = parentName , deposit_amount = deposit ,advanceAmount  = advance_amount, image = file.read(),imgName = filename,mimeType = mimetype)
         db.session.add(add_person)
         db.session.commit()
         # payment = Payments(payer_Id = session["id"])
@@ -248,6 +253,13 @@ def edit_delete_person():
         person.age = request.form.get("person-age")
         person.address = request.form.get("person-address")
         person.phone_number = request.form.get("person-phone-number")
+        file = request.files['pic']
+        if(file):
+            filename = secure_filename(file.filename)
+            mimetype = file.mimetype
+            person.image = file.read()
+            person.imgName = filename
+            person.mimeType = mimetype
         person.person_email = request.form.get("person-email")
         person.aadhar_number = request.form.get("person-aadhar-number")
         # person.day = request.form.get("person-day-to-remind")
@@ -311,6 +323,24 @@ def Home():
 
 
 
+def vacancy_details():
+
+    # Get all rooms with their property details and count of persons in each room
+    rooms = db.session.query(Rooms, PropertyDetail.property_name, func.count(Persons.person_id)).join(PropertyDetail).outerjoin(Persons).group_by(Rooms.room_id).all()
+
+    room_vacancies = []
+    for room, property_name, persons_count in rooms:
+        # Calculate vacancy
+        vacancy = int(room.sharableType) - persons_count
+
+        # Prepare the data to send to UI
+        room_vacancies.append({
+            'property_name': property_name,
+            'room_no': room.room_no,
+            'vacancy': vacancy
+        })
+    return room_vacancies
+
 
 
 
@@ -347,25 +377,51 @@ def payment():
 
 
 
+@after_login.route("/all_members")
+def all_members():
+    persons = Persons.query.filter_by(user_id_details = session["id"])    
+    for person in persons:
+        print(f"Person Id : {person.person_id}")
+        print(f"Person Name: {person.person_name}")
+        print(f"Room No: {person.room.room_no}")
+        print(f"Room No: {person.room.room_no}")
+        print(f"Property Name: {person.room.property_detail.property_name}")
+        print(f"Person ID: {person.person_id}")
+        print(f"Vacating Date: {person.vacating_date}")
+        print(f"upcoming date: {person.next_remainder_date}")
+        print(f"upcoming date: {type(person.next_remainder_date)}")
+        # print(f"Vacating Month: {person.vacating_month}")
+        # print(f"Vacating Amount: {person.vacating_amount}")
+        # print(f"Vacating Person Name: {person.vacating_person_name}")
+        print(f"Due Month: {person.due_month}")
+        print("-----")
+    return "fnweiufneiu"
+
 
 # assuming upcoming_date is in the format "YYYY-MM-DD"
 
 @after_login.route("/updatePayments",methods=["GET"])
 def check_and_update_payments():
     today = datetime.today().date()
-    persons = Persons.query.filter_by(user_id_details = session["id"])
+    
+    persons = Persons.query.filter_by(vacated = False).all()
     for person in persons:
         upcoming_date= person.next_remainder_date
         print("next remainder date ", upcoming_date , type(upcoming_date))
-        # upcoming_date = datetime.strptime(upcoming_date_str, "%d.%m.%Y")
-        if (upcoming_date - today).days <= 7:
+        if(person.vacating_date == today):
+            person.vacated = True
+        if(person.vacating_date) and (person.vacating_date- upcoming_date).days  >= 28 and person.vacating_date == True :
+            vacating = True
+        else:
+            vacating = False
+        if (upcoming_date - today).days <= 7 and (not vacating):
             print((upcoming_date-today).days)
             print("payment user id details ",person.user_id_details)
             print("person id ",person.person_id)
             print("upcoming date ", upcoming_date)
             # Check if there is an existing record
             existing_payment = Payments.query.filter_by(user_id_details=person.user_id_details, person_id=person.person_id, payment_due_date=upcoming_date, due_month = person.due_month).first()
-            # If there is no existing record, create a new one
+             # If there is no existing record, create a new one
             if existing_payment is None:
                 payment = Payments(user_id_details=person.user_id_details, person_id=person.person_id, due_month=upcoming_date.strftime("%b%y"), paid =False, persons_room_payments = person.persons_room,payment_due_date = person.next_remainder_date )
                 print(payment.user_id_details)
@@ -373,11 +429,42 @@ def check_and_update_payments():
                 person.due_month = upcoming_date.strftime("%b%y")
                 next_remainder_date = get_next_month_date(str(person.next_remainder_date))
                 next_remainder_date = datetime.strptime(next_remainder_date, '%Y-%m-%d').date()
-                person.next_remainder_date =next_remainder_date
+                person.next_remainder_date =  next_remainder_date
                 print("after payment insert")
                 db.session.add(payment)
     db.session.commit()
     return "updated"
+
+
+@after_login.route("/vacatingDate", methods=["POST"])
+def vacating_date():
+    person_id = request.form.get("person_id")
+    date_str = request.form.get('date')
+
+    # Validate inputs
+    if not person_id or not date_str:
+        abort(400, description="Missing person_id or date")
+
+    try:
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        abort(400, description="Incorrect date format, should be YYYY-MM-DD")
+
+    # Fetch the person
+    vacating_person = Persons.query.filter_by(user_id_details=session["id"], person_id=person_id).first()
+
+    # If the person doesn't exist, return an error
+    if not vacating_person:
+        abort(404, description="Person not found")
+
+    # Update the date
+    vacating_person.vacating_date = date
+
+    # Commit the changes
+    db.session.commit()
+
+    return jsonify({'status': 'success'})
+
 
 
 # @after_login.route("/updatePayments",methods=["GET"])
@@ -446,8 +533,6 @@ def paidMembers():
     return render_template("paid_members.html", paid_members =paid_members)
 
 
-
-
 @after_login.route('/payments_based_on_month', methods=['GET', 'POST'])
 def get_payments():
     payments = []
@@ -465,51 +550,45 @@ def get_payments():
     # Render the results in a template
     return render_template('payments_completed.html', payments=payments)
 
-@after_login.route("/p")
-def p():
-    persons = Persons.query.all()
-    today = datetime.today().date()
-    for person in persons:
-        # upcoming_date = get_upcoming_date(person.day) 
-        # upcoming_date = datetime.strptime(upcoming_date, "%d.%m.%Y")
-        upcoming_date = person.next_remainder_date
-        print(upcoming_date)
-        if (upcoming_date - today).days <= 7:
-            # print((upcoming_date-today).days)
-            # print("payment user id details ",person.user_id_details)
-            # print("person id ",person.person_id)
-            # print("upcoming date ", upcoming_date)
-            # Check if there is an existing record
-            existing_payment = Payments.query.filter_by(user_id_details=person.user_id_details,person_id=person.person_id ,paid =False,payment_due_date = person.next_remainder_date)
-            for ele in existing_payment:
-                print("payment id ",ele.payment_id)
-                print("person id ",ele.person_id)
-                print("person room ",ele.persons_room_payments)
-                print("payment due date",ele.payment_due_date,"utuet")
-                print("-----------------------")
-    return "diufeubu"
+@after_login.route('/room_vacancies')
+def room_vacancies():
+    # Get all rooms with their property details, count of persons in each room, and the vacating date
+    rooms = db.session.query(Rooms, PropertyDetail.property_name, func.count(Persons.person_id), Persons.vacating_date).join(PropertyDetail).outerjoin(Persons).filter(Rooms.user_id_details == session["id"]).group_by(Rooms.room_id).all()
+    room_vacancies = []
+    for room, property_name, persons_count, vacating_date in rooms:
+        # Calculate vacancy
+        vacancy = int(room.sharableType) - persons_count
+
+        # Prepare the data to send to UI
+        room_vacancies.append({
+            'property_name': property_name,
+            'room_no': room.room_no,
+            'vacancy': vacancy,
+            'vacating_date': vacating_date
+        })
+
+    return render_template('room_vacancies.html', room_vacancies=room_vacancies)
 
 
 
-@after_login.route("/date")
-def date():
-        # specify the due date you're interested in
-    due_date_of_interest = datetime.strptime('2024-02-07', '%Y-%m-%d').date()
+@after_login.route('/paid_vs_unpaid_members')
+def paid_vs_unpaid_members():
+    # Get all payments
+    all_payments = Payments.query.all()
 
-    # query the Payments table
-    payments_due_on_date = Payments.query.filter(Payments.payment_due_date == due_date_of_interest).all()
+    # Initialize sets for paid and unpaid members
+    paid_members = set()
+    unpaid_members = set()
 
-    for payment in payments_due_on_date:
-        print(f"Payment ID: {payment.payment_id}")
-        print(f"User ID Details: {payment.user_id_details}")
-        print(f"Persons Room Payments: {payment.persons_room_payments}")
-        print(f"Person ID: {payment.person_id}")
-        print(f"Paid Date: {payment.paid_date}")
-        print(f"Paid Month: {payment.paid_month}")
-        print(f"Paid Amount: {payment.paid_amount}")
-        print(f"Payment Due Date: {payment.payment_due_date}")
-        print(f"Paid: {payment.paid}")
-        print(f"Paid Person Name: {payment.paid_person_name}")
-        print(f"Due Month: {payment.due_month}")
-        print("------")
-    return "ghztnf"
+    # Iterate over all payments
+    for payment in all_payments:
+        if payment.paid:
+            paid_members.add(payment.person_id)
+        else:
+            unpaid_members.add(payment.person_id)
+
+    # Prepare data for the pie chart
+    labels = ['Paid Members', 'Unpaid Members']
+    data = [len(paid_members), len(unpaid_members)]
+
+    return {'labels': labels, 'data': data}

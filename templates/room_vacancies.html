@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename = 'room_vacancies.css')}}">
+{% endblock %}
+{%block content %}
+<center>
+
+    <h2>Room Vacancies</h2>
+</center>
+
+    <table>
+        <tr>
+            <th>Property Name</th>
+            <th>Room No</th>
+            <th>Vacancy</th>
+        </tr>
+        {% for room in room_vacancies %}
+        <tr>
+            <td>{{ room.property_name }}</td>
+            <td>{{ room.room_no }}</td>
+            <td>{{ room.vacancy }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -2,6 +2,7 @@ from flask import Flask,render_template,url_for,request,redirect,session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 import os
+from flask_socketio import SocketIO, send
 
 app = Flask(__name__)
 # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
@@ -14,6 +15,7 @@ app.permanent_session_lifetime = timedelta(days=10)
 
 db = SQLAlchemy(app)
 
+socketio = SocketIO(app)
 
 # def start_the_run():
 #     with app.app_context():

@@ -19,7 +19,7 @@ ADD person details
     <!-- <input type="number" class="person-day-to-remind" name ='person-day-to-remind' min="1" max="31" required placeholder="Day to remind">  -->
     <input type="text" placeholder="Enter your Aadhar number"  class="person-aadhar" name="person-aadhar-number" >
     <!-- <input type="file" id="AadharCard" name="AadharCard"accept="image/*"> -->
-    <input type="file" id="pic" name="pic" accept="image/*" required />
+    <input type="file" id="pic" name="pic" accept="image/*"  />
     <input type="email" placeholder="Enter the persons mail Id" class="person-email" name="person-email">
     <input type="text" placeholder="Enter the monthly payment Amount" class="person-amount" name="person-payment-amount">
     <input type="text" placeholder="Enter the deposit amount" class="person-deposit-amount" name="person-deposit-amount" >
@@ -35,11 +35,8 @@ ADD person details
 <ul class="room-list">
     {% for person in person_details %}
 <li class="room-item">
-    <form method="GET" class="person-item-form" action="/editDelete">
         <div class="person-details" >
-            <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
             <h4 class="person-name" >Person name: {{ person.person_name }}</h4>
-            <input type="hidden" value="{{person.parentName}}" name="person_parent_name"> 
             <h4>Parent Name :{{person.parentName}}</h4>
             <h4 class="person-age" name ="person-age" value="{{person.age}}">Person Age: {{person.age}}</h4>
             <h4 class="person-address" name="person-address" value="{{person.address}}">address : {{person.address}}</h4>
@@ -48,23 +45,36 @@ ADD person details
             <h4 class="person-aadhar" name="person-aadhar" value="{{person.aadhar_number}}">Aadhar number :{{person.aadhar_number}}</h4>
             <h4>Next payment date : {{ person.next_remainder_date}}</h4>
             <h4  class="person-amount" name="person-amount" value="{{person.monthly_payment_amount}}">Payment amount : {{person.monthly_payment_amount}}</h4>
-            <input type="hidden" value="{{person.monthly_payment_amount}}" name="payment-amount">
-            <input type="hidden" name="payment-date" value="{{person.next_remainder_date}}" >
-            <input type="hidden" value="{{ person.person_name }}" name="person_name">
-            <input type="hidden" value="{{person.phone_number}}" name="person-number">
-            <input type="hidden" value="{{person.aadhar_number}}" name="person-aadhar">
-            <input type="hidden" value="{{person.age}}" name="person-age">
-            <input type="hidden" value="{{person.address}}" name="person-address" > 
-            <input type="hidden" value="{{person.person_email}}" name="person-email">
-            <input type="hidden" name="person_advance" value="{{person.advanceAmount}}" name="person-advance"> 
+         
             <h4 class="person-advance" name="person-advance" > Advance amount : {{person.advanceAmount}}</h4>
-            <input type="hidden" name="person_deposit" value="{{person.deposit_amount}}" name="person-deposit">
             <h4 class="person-deposit" name="person-deposit" >Deposit Amount : {{person.deposit_amount}}</h4>
-            <input type="hidden" name="day" value="{{person.day}}">
-            <input type="hidden" name="home" value="{{False}}">
-            {%  if user and user.image %}
-            <img src="{{ url_for('display_image') }}" alt="User Image">
+        
+            {%  if  person.image %}
+            <img src="data:{{ person.mimeType }};base64,{{ person.image }}" alt="{{ person.image }}" id="personImage">
+            
+            <a href="data:{{ person.mimeType }};base64,{{ person.image }}" download ="{{ person.imgName }}">
+                <button class="Btn">
+                    <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg>
+                    <span class="icon2"></span>
+                    <span class="tooltip">Download</span>
+                </button>
+            </a>
             {% endif %}
+            <form method="GET" class="person-item-form" action="/editDelete">
+                <input type="hidden" name="person_deposit" value="{{person.deposit_amount}}" name="person-deposit">
+                <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
+                <input type="hidden" value="{{person.parentName}}" name="person_parent_name"> 
+                <input type="hidden" value="{{person.monthly_payment_amount}}" name="payment-amount">
+                <input type="hidden" name="payment-date" value="{{person.next_remainder_date}}" >
+                <input type="hidden" value="{{ person.person_name }}" name="person_name">
+                <input type="hidden" value="{{person.phone_number}}" name="person-number">
+                <input type="hidden" value="{{person.aadhar_number}}" name="person-aadhar">
+                <input type="hidden" value="{{person.age}}" name="person-age">
+                <input type="hidden" value="{{person.address}}" name="person-address" > 
+                <input type="hidden" value="{{person.person_email}}" name="person-email">
+                <input type="hidden" name="person_advance" value="{{person.advanceAmount}}" name="person-advance"> 
+                <input type="hidden" name="day" value="{{person.day}}">
+                <input type="hidden" name="home" value="{{False}}">
             <h4><button type="submit" name="edit-delete" value="edit">Edit</button></h4> </form>
            <form method="POST" action="/delete">
             <input type="hidden" value="{{person.person_id}}" name="personId_clicked">
@@ -76,8 +86,14 @@ ADD person details
  {% endif %}
  <script>
     var today = new Date();
-    today.setDate(today.getDate() + 1); // set 'today' to tomorrow's date
-    var tomorrow = today.toISOString().split('T')[0];
-    document.getElementById('next_remainder_date').min = tomorrow;
+    today.setDate(today.getDate()); // set 'today' to tomorrow's date
+    today = today.toISOString().split('T')[0];
+    document.getElementById('next_remainder_date').min = today;
     </script>
+    <style>
+        #personImage {
+            width: 100px;  /* Adjust as needed */
+            height: auto;
+        }
+    </style>
 {% endblock %}

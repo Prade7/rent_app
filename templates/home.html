@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 
-
 {% block link %}
-<link rel="stylesheet" href="{{url_for('static',filename = 'roomDetails.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename = 'home.css')}}">
 {% endblock %}
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div style="width: 200px; height: 200px;">
+    <canvas id="myChart"></canvas>
+</div>
 
-<!-- {{ all_persons }} -->
 <table>
     <tr>
 
@@ -14,16 +17,13 @@
     <th>Person name</th>
     <th>Phone number</th>
     <th>Property name</th>
+    <th>Vacating date</th>
 </tr>
     {% for person in all_persons %}
 <tr>
     <td>{{person.room.room_no}}</td>
     <td>{{person.person_name}}</td>
-    <!-- <td>{{person.age}}</td> -->
-    <!-- <td>{{person.address}}</td> -->
     <td>{{person.phone_number}}</td>
-    <!-- <td>{{person.person_email}}</td> -->
-    <!-- <td>{{person.aadhar_number}}</td> -->
     <td>{{person.room.property_detail.property_name}}</td>
     <td>
         {{person.monthly_payment_amount}}
@@ -46,18 +46,19 @@
         <input type="hidden" name="person_deposit" value="{{person.deposit_amount}}" />
         <input type="hidden" name="person_advance" value="{{person.advanceAmount}}" />
         <button type="edit">Edit Person details</button>
+    </form>
+    <!-- {{person.vacating_date}} -->
+    <form id="dateForm">
+    <input type="hidden" value="{{person.person_id}}" name="personId_clicked" id="personId_clicked">
+    <input type="date" name="vacating_date" id="vacating_date" value="{{person.vacating_date}}"  />
+    <button type="submit">Update vacating date</button>
     </form></td>
         <td>
-            
     </td>
 </tr>
-
 {% endfor %}
-
 </table>
-
 {% if unpaid_payments %}
-
 <table>
     <tr>
         <th>Room no</th>
@@ -68,7 +69,6 @@
         <th>Monthly payment date</th>
     </tr>
     {%     for person, room, property_detail, payment in unpaid_payments %}
-
     <tr>
         <td>{{room.room_no}}</td>
         <td>{{property_detail.property_name}}</td>
@@ -76,20 +76,64 @@
         <td>{{person.phone_number}}</td>
         <td>{{person.monthly_payment_amount}}</td>
         <td>{{payment.payment_due_date}}</td>
-        <td><form action="/paid" method="POST">
+        <td>
+            <form action="/paid" method="POST">
             <input type="hidden" name = "paid-payment-id" value ="{{payment.payment_id}}">
             <input type="hidden" name="paid-amount" value="{{payment.person.monthly_payment_amount}}">
             <input type="hidden" name="paid-person-id" value="{{person.person_id}}">
             <input type="hidden" name="paid-person-name" value="{{person.person_name}}" >
             <button type="edit" >Paid for {{payment.due_month}}</button>
-        <!-- <button type="edit">Edit Person details</button> -->
-
         </form></td>
     </tr>
     {% endfor %}
 </table>
 {% endif %}
+<script>
+   
 
+    $(document).ready(function(){
+    $('#dateForm').on('submit', function(event){
+        event.preventDefault();
+        $.ajax({
+            url: '/vacatingDate',
+            type: 'POST',
+            data: {
+                'person_id': $('#personId_clicked').val(),
+                'date': $('#vacating_date').val()
+            },
+            success: function(response){
+                console.log(response);
+            }
+        });
+    });
+});
+fetch('/paid_vs_unpaid_members')
+    .then(response => response.json())
+    .then(data => {
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.data,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',  // Color for 'Paid Members'
+                        'rgba(255, 99, 132, 0.2)'   // Color for 'Unpaid Members'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',  // Color for 'Paid Members'
+                        'rgba(255, 99, 132, 1)'   // Color for 'Unpaid Members'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        });
+    });
+
+    
+
+</script>
 {% endblock %}
 
 

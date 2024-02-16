@@ -6,7 +6,7 @@
 {% block content %}
 {% if person_details %}
 <!-- {{person_details}} -->
-<form method="POST" action="">
+<form method="POST" action=""  enctype="multipart/form-data">
     <label for="person-name">Person Name</label>
     <input type="text" id="person-name" name="person-name" placeholder="Enter the person name" value="{{ person_details['name'] }}">
 
@@ -39,14 +39,15 @@
 
     <label for="person_advance">Advance</label>
     <input type="text" id="person_advance" placeholder="Enter the advance" class="person-advance" name="person_advance" value="{{ person_details['advanceAmount'] }}" >   
+    <input type="file" id="pic" name="pic" accept="image/*"      />
 
     <button type="submit" class="save-changes">Save Changes</button> 
 </form>
 <script>
     var today = new Date();
     today.setDate(today.getDate() + 1); // set 'today' to tomorrow's date
-    var tomorrow = today.toISOString().split('T')[0];
-    document.getElementById('person-date-to-remind').min = tomorrow;
+    today = today.toISOString().split('T')[0];
+    document.getElementById('person-date-to-remind').min = today;
     </script>
 {% endif %}
 

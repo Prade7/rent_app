@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from start import app,db
+from datetime import date
 
 class User(db.Model):
     __tablename__ = 'login_details'
@@ -46,9 +47,11 @@ class Persons(db.Model):
     parentName = db.Column(db.String(20),nullable=True)
     deposit_amount = db.Column(db.String(20),nullable=True)
     advanceAmount = db.Column(db.String(20),nullable=True)
+    vacating_date = db.Column(db.Date, default= date(2000, 1, 1))
     persons_room = db.Column(db.Integer,db.ForeignKey("rooms_details.room_id"))
     user_id_details = db.Column(db.Integer, db.ForeignKey('login_details.id'))
-
+    vacated = db.Column(db.Boolean , default=False)
+    
 class Payments(db.Model):
     __table_name__ = "payments"
     payment_id = db.Column(db.Integer,primary_key = True)
@@ -64,6 +67,19 @@ class Payments(db.Model):
     due_month = db.Column(db.String(20))
     person = db.relationship('Persons', backref='payments')
     room = db.relationship('Rooms', backref='payments')
+
+# class PgRoom(db.Model):
+#     __tablename__ = "pg_room"
+#     pg_room_id = db.Column(db.Integer, primary_key = True)
+#     pg_name = db.Column(db.String(200), nullable=False)
+#     pg_description = db.Column(db.String(500), nullable=False)
+#     pg_price = db.Column(db.String(20), nullable=False)
+#     pg_image = db.Column(db.Text, nullable=True)
+#     mimeType = db.Column(db.Text,nullable= True)
+#     imgName = db.Column(db.Text,nullable = True)
+#     room_type = db.Column(db.Text,nullable=True)
+#     user_id_details = db.Column(db.Integer, db.ForeignKey('login_details.id'))
+
 
 with app.app_context():
     db.create_all()
